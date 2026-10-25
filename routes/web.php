@@ -51,15 +51,19 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/produk/{produk}', [ProdukController::class, 'show'])->name('produk.show');
     Route::get('/produk/{produk}/edit', [ProdukController::class, 'edit'])->name('produk.edit');
     Route::put('/produk/{produk}', [ProdukController::class, 'update'])->name('produk.update');
+    Route::delete('/produk/{produk}', [ProdukController::class, 'destroy'])->name('produk.destroy');
     Route::patch('/produk/{produk}/toggle-active', [ProdukController::class, 'toggleActive'])->name('produk.toggle-active');
 
     // Varian Produk (nested under produk)
     Route::post('/produk/{produk}/varian', [ProdukController::class, 'storeVarian'])->name('produk.varian.store');
     Route::put('/produk/{produk}/varian/{varian}', [ProdukController::class, 'updateVarian'])->name('produk.varian.update');
+    Route::delete('/produk/{produk}/varian/{varian}', [ProdukController::class, 'destroyVarian'])->name('produk.varian.destroy');
     Route::patch('/produk/{produk}/varian/{varian}/toggle-active', [ProdukController::class, 'toggleVarianActive'])->name('produk.varian.toggle-active');
 
     // Penjualan (pencatatan pesanan & pembayaran)
     Route::get('/penjualan', [PenjualanController::class, 'index'])->name('penjualan.index');
+    Route::get('/penjualan/create', [PenjualanController::class, 'create'])->name('penjualan.create');
+    Route::post('/penjualan', [PenjualanController::class, 'store'])->name('penjualan.store');
     Route::get('/penjualan/{penjualan}', [PenjualanController::class, 'show'])->name('penjualan.show');
     Route::patch('/penjualan/{penjualan}/status', [PenjualanController::class, 'updateStatus'])->name('penjualan.update-status');
 
@@ -74,6 +78,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 Route::middleware(['auth', 'role:karyawan'])->prefix('karyawan')->name('karyawan.')->group(function () {
     Route::get('/dashboard', [KasirController::class, 'index'])->name('dashboard');
     Route::get('/kasir', [KasirController::class, 'index'])->name('kasir.index');
+    Route::post('/kasir/pesanan', [KasirController::class, 'store'])->name('kasir.store');
 });
 
 // Admin ATAU Karyawan bisa akses

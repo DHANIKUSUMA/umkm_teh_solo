@@ -17,15 +17,18 @@ class Penjualan extends Model
         'tanggal',
         'total',
         'metode_bayar',
+        'bukti_bayar',
         'status',
-        'catatan'
+        'catatan',
     ];
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function detailPenjualans() {
+    public function detailPenjualans()
+    {
         return $this->hasMany(DetailPenjualan::class, 'penjualan_id');
     }
 }

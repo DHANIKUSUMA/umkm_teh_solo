@@ -185,4 +185,39 @@ class ProdukController extends Controller
         return redirect()->route('admin.produk.show', $produk)
             ->with('success', "Varian berhasil {$status}.");
     }
+
+    /**
+     * Hapus varian produk jika belum ada riwayat penjualan.
+     */
+    public function destroyVarian(Produk $produk, VarianProduk $varian): RedirectResponse
+    {
+        if ($varian->detailPenjualans()->exists()) {
+            return redirect()->route('admin.produk.show', $produk)
+                ->with('error', 'Varian tidak dapat dihapus karena sudah memiliki data riwayat penjualan. Anda dapat menonaktifkan varian ini.');
+        }
+
+        $varian->delete();
+
+        return redirect()->route('admin.produk.show', $produk)
+            ->with('success', 'Varian berhasil dihapus.');
+    }
+
+    /**
+     * Hapus produk beserta variannya jika belum ada transaksi.
+     */
+    public function destroy(Produk $produk): RedirectResponse
+    {
+        $hasSales = $produk->varians()->whereHas('detailPenjualans')->exists();
+
+        if ($hasSales) {
+            return redirect()->route('admin.produk.index')
+                ->with('error', 'Produk tidak dapat dihapus karena sudah memiliki riwayat transaksi penjualan. Anda dapat menonaktifkan produk ini.');
+        }
+
+        $produk->varians()->delete();
+        $produk->delete();
+
+        return redirect()->route('admin.produk.index')
+            ->with('success', 'Produk dan variannya berhasil dihapus.');
+    }
 }

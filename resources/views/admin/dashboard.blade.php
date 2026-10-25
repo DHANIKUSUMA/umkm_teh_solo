@@ -36,8 +36,8 @@
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm font-medium text-stone-500">Total Transaksi</p>
-                            <p class="text-2xl sm:text-3xl font-bold text-amber-900 mt-1">{{ $totalOrders }}</p>
-                            <p class="text-xs text-stone-400 mt-1">{{ $todayOrders }} hari ini</p>
+                            <p class="text-2xl sm:text-3xl font-bold text-amber-900 mt-1">{{ $todayOrders }}</p>
+                            <p class="text-xs text-stone-400 mt-1"> hari ini</p>
                         </div>
                         <div class="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center border border-amber-200/60">
                             <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

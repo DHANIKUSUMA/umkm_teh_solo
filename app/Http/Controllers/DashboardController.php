@@ -39,6 +39,14 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
+        // Produk aktif beserta varian untuk form tambah pesanan langsung
+        $produks = Produk::where('is_active', true)
+            ->with(['varians' => function ($q) {
+                $q->where('is_active', true)->orderBy('nama_varian');
+            }])
+            ->orderBy('nama')
+            ->get();
+
         return view('admin.dashboard', compact(
             'totalProducts',
             'totalVariants',
@@ -49,6 +57,7 @@ class DashboardController extends Controller
             'todayRevenue',
             'monthlyRevenue',
             'recentOrders',
+            'produks',
         ));
     }
 }
