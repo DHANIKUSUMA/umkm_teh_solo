@@ -1,58 +1,121 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# UMKM Teh Solo
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi web untuk membantu operasional UMKM Teh Solo. Aplikasi ini menyediakan pengelolaan produk dan varian, pencatatan transaksi melalui kasir, serta pemantauan laporan dan perkiraan penjualan.
 
-## About Laravel
+## Fitur
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Admin**
+  - Dashboard ringkasan usaha.
+  - Pengelolaan akun admin dan karyawan, termasuk status aktif.
+  - Pengelolaan produk, varian, harga modal, dan harga jual.
+  - Pencatatan dan pengelolaan transaksi, metode pembayaran, bukti pembayaran, dan status transaksi.
+  - Laporan penjualan bulanan, pendapatan, modal, laba, transaksi batal, metode pembayaran, dan produk terlaris.
+  - Perkiraan pendapatan dan jumlah transaksi menggunakan *Simple Moving Average* (SMA), dengan periode 2–12 bulan.
+- **Karyawan**
+  - Kasir untuk mencatat transaksi dari produk dan varian yang aktif.
+  - Riwayat dan ringkasan transaksi harian milik karyawan yang sedang login.
+- Hak akses berbasis peran untuk admin dan karyawan.
+- Profil pengguna dan autentikasi.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Teknologi
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- PHP 8.3 atau lebih baru
+- Laravel 13
+- SQLite (konfigurasi awal)
+- Node.js dan npm
+- Vite, Tailwind CSS, dan Alpine.js
+- Spatie Laravel Permission untuk peran pengguna
 
-## Learning Laravel
+## Persiapan
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Pastikan PHP, Composer, Node.js, dan npm sudah terpasang.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+1. Pasang dependensi PHP:
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+   ```bash
+   composer install
+   ```
 
-## Agentic Development
+2. Siapkan file konfigurasi lingkungan. Salin `.env.example` menjadi `.env` jika file `.env` belum tersedia.
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+   ```powershell
+   Copy-Item .env.example .env
+   ```
+
+3. Buat application key:
+
+   ```bash
+   php artisan key:generate
+   ```
+
+4. Pastikan `.env` menggunakan SQLite:
+
+   ```dotenv
+   DB_CONNECTION=sqlite
+   ```
+
+   Basis data lokal menggunakan `database/database.sqlite`. Jika file tersebut belum ada, buat file kosong sebelum menjalankan migrasi:
+
+   ```powershell
+   New-Item -ItemType File database\database.sqlite
+   ```
+
+5. Jalankan migrasi dan data awal:
+
+   ```bash
+   php artisan migrate --seed
+   ```
+
+6. Pasang dependensi frontend dan buat symbolic link untuk file unggahan:
+
+   ```bash
+   npm install
+   php artisan storage:link
+   ```
+
+7. Jalankan aplikasi. Buka dua terminal dari direktori proyek:
+
+   ```bash
+   php artisan serve
+   ```
+
+   ```bash
+   npm run dev
+   ```
+
+   Aplikasi tersedia di `http://localhost:8000`.
+
+Untuk membuat aset frontend tanpa menjalankan Vite dalam mode pengembangan:
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+npm run build
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## Akun demo
 
-## Contributing
+Seeder menyediakan akun berikut untuk penggunaan lokal:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+| Peran | Email | Kata sandi |
+| --- | --- | --- |
+| Admin | `owner@tehsolo.test` | `password123` |
+| Karyawan | `kasir1@tehsolo.test` | `password123` |
 
-## Code of Conduct
+Akun dan kata sandi ini hanya untuk pengembangan. Ganti kredensial sebelum aplikasi digunakan di lingkungan lain.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Pengujian
 
-## Security Vulnerabilities
+Jalankan seluruh pengujian:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+php artisan test --compact
+```
 
-## License
+## Struktur penting
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- `app/Http/Controllers/Admin` — dashboard dan fitur administrasi.
+- `app/Http/Controllers/Karyawan` — fitur kasir karyawan.
+- `app/Models` — model produk, varian, penjualan, detail penjualan, dan pengguna.
+- `database/migrations` — skema basis data.
+- `database/seeders` — akun demo, produk, transaksi, dan data contoh forecast.
+- `resources/views` — tampilan Blade.
+- `routes/web.php` — rute aplikasi dan pembatasan akses berdasarkan peran.
