@@ -81,6 +81,10 @@
                     </div>
                 </div>
             </div>
+            <a href="{{ route('admin.penjualan.create') }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-700 to-emerald-600 text-white rounded-xl text-sm font-semibold hover:from-emerald-600 hover:to-emerald-500 transition-all shadow-md shadow-emerald-700/20">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    <span>Tambah Transaksi Baru</span>
+                </a>
 
             {{-- Penjualan Terakhir --}}
             <div class="bg-white/90 backdrop-blur-md rounded-xl sm:rounded-2xl shadow-md border border-stone-200/80 relative overflow-hidden">
@@ -89,6 +93,7 @@
                     <h3 class="text-lg font-bold text-emerald-900">Penjualan Terakhir</h3>
                     <p class="text-sm text-stone-500 mt-0.5">5 transaksi terbaru</p>
                 </div>
+                
 
                 {{-- Desktop Table --}}
                 <div class="hidden sm:block overflow-x-auto">
