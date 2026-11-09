@@ -13,11 +13,6 @@
                     <p class="text-xs text-stone-500 mt-0.5">Catat transaksi penjualan langsung dari panel administrasi</p>
                 </div>
             </div>
-            <div>
-                <a href="{{ route('admin.penjualan.index') }}" class="px-3.5 py-2 rounded-xl border border-stone-200 text-stone-600 hover:bg-stone-100 text-xs font-semibold transition">
-                    &larr; Riwayat Penjualan
-                </a>
-            </div>
         </div>
     </x-slot>
 
