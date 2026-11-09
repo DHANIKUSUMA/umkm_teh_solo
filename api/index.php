@@ -1,3 +1,3 @@
 <?php
 
-require __DIR__ . '/../public/resources/views/auth/login.blade.php';
+require __DIR__ . '/../public/index.php';
