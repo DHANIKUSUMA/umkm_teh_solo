@@ -14,6 +14,7 @@ $storagePath = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATO
 $app->useStoragePath($storagePath);
 
 foreach ([
+    '/tmp/views',
     $app->storagePath('framework/views'),
     $app->storagePath('framework/cache/data'),
     $app->storagePath('framework/sessions'),
@@ -21,8 +22,8 @@ foreach ([
     $app->storagePath('app/private'),
     $app->storagePath('app/public'),
 ] as $directory) {
-    if (! is_dir($directory) && ! mkdir($directory, 0755, true) && ! is_dir($directory)) {
-        throw new RuntimeException("Unable to create writable storage directory: {$directory}");
+    if (! is_dir($directory)) {
+        @mkdir($directory, 0755, true);
     }
 }
 
