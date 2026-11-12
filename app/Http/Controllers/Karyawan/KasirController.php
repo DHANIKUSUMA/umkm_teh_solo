@@ -70,13 +70,13 @@ class KasirController extends Controller
             return back()->with('error', 'Keranjang pesanan masih kosong. Silakan pilih minimal 1 item produk.');
         }
 
-        // Upload bukti pembayaran jika disertakan.
-        $buktiPath = null;
-        if ($request->hasFile('bukti_bayar')) {
-            $buktiPath = $supabaseStorage->store($request->file('bukti_bayar'));
-        }
-
         try {
+            // Upload bukti pembayaran jika disertakan.
+            $buktiPath = null;
+            if ($request->hasFile('bukti_bayar')) {
+                $buktiPath = $supabaseStorage->store($request->file('bukti_bayar'));
+            }
+
             $penjualan = DB::transaction(function () use ($cartItems, $validated, $buktiPath) {
                 $today = Carbon::today()->format('Ymd');
                 $countToday = Penjualan::whereDate('tanggal', Carbon::today())->count() + 1;
@@ -135,8 +135,8 @@ class KasirController extends Controller
 
             return redirect()->route('karyawan.kasir.index')
                 ->with('success', "Pesanan baru berhasil dicatat! No. Nota: {$penjualan->no_nota} (Total: Rp ".number_format($penjualan->total, 0, ',', '.').')');
-        } catch (\Exception $e) {
-            return back()->with('error', 'Gagal menyimpan pesanan: '.$e->getMessage());
+        } catch (\Throwable $e) {
+            return back()->withInput()->with('error', 'Gagal menyimpan pesanan: '.$e->getMessage());
         }
     }
 

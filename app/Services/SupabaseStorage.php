@@ -14,19 +14,29 @@ class SupabaseStorage
     public function store(UploadedFile $file): string
     {
         $serviceKey = config('services.supabase.service_role_key');
+        $isVercel = isset($_ENV['VERCEL']) || isset($_SERVER['VERCEL']) || env('VERCEL');
 
-        // Jika service_role_key belum diisi (misal saat pengembangan lokal), fallback ke local public disk
+        // Jika service_role_key belum diisi
         if (! is_string($serviceKey) || trim($serviceKey) === '') {
+            if ($isVercel) {
+                throw new RuntimeException('SUPABASE_SERVICE_ROLE_KEY belum diisi di Environment Variables Vercel. Silakan isi di Vercel Dashboard lalu lakukan Redeploy.');
+            }
+
+            // Fallback ke penyimpanan lokal jika di laptop (local environment)
             return $file->store('bukti_bayar', 'public');
         }
 
         $path = 'bukti_bayar/'.Str::uuid().'.'.$file->extension();
         $mimeType = $file->getMimeType() ?? 'application/octet-stream';
 
-        $this->request()
+        $response = $this->request()
             ->withBody($file->getContent(), $mimeType)
-            ->post($this->objectUrl($path))
-            ->throw();
+            ->post($this->objectUrl($path));
+
+        if (! $response->successful()) {
+            $errorMsg = $response->json('message') ?? $response->json('error') ?? $response->body();
+            throw new RuntimeException("Gagal upload ke Supabase Storage ({$response->status()}): {$errorMsg}. Pastikan bucket '{$this->configValue('storage_bucket')}' sudah dibuat di Supabase.");
+        }
 
         return $path;
     }
