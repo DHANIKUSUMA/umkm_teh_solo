@@ -52,14 +52,28 @@
                             <div class="text-sm font-bold text-stone-800">Status Produk</div>
                             <div class="text-xs text-stone-500">Produk saat ini berstatus: {{ $produk->is_active ? 'Aktif' : 'Non-Aktif' }}</div>
                         </div>
+                        <div class="flex items-center gap-2">
                         <span class="px-2.5 py-1 rounded-full text-xs font-bold {{ $produk->is_active ? 'bg-emerald-100 text-emerald-800' : 'bg-stone-200 text-stone-600' }}">
-                            {{ $produk->is_active ? 'Aktif' : 'Non-Aktif' }}
+                            {{ $produk->is_active ? 'Aktif' : 'NonAktif' }}
                         </span>
+                        <form method="POST" action="{{ route('admin.produk.update', $produk) }}">
+                            {{-- input nama dan tombol simpan --}}
+                        </form>
+                        <form method="POST" action="{{ route('admin.produk.toggle-active', $produk) }}">
+                            @csrf
+                            @method('PATCH')
+
+                            <button type="submit" class="inline-flex items-center px-2.5 py-1.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-medium hover:bg-amber-100 transition" title="Edit">
+                                {{ $produk->is_active ? 'Nonaktifkan' : 'Aktifkan' }}
+                            </button>
+                        </form>
+                    </div>
+
                     </div>
 
                     <div class="pt-4 border-t border-stone-200/80 flex items-center justify-between">
                         <a href="{{ route('admin.produk.show', $produk) }}" class="text-xs font-semibold text-emerald-700 hover:underline flex items-center gap-1">
-                            <span>Kelola varian & harga produk &rarr;</span>
+                            <span>Kelola varian & harga produk</span>
                         </a>
 
                         <div class="flex items-center gap-2">
@@ -67,7 +81,7 @@
                                 Batal
                             </a>
                             <button type="submit" class="px-5 py-2 bg-gradient-to-r from-emerald-700 to-emerald-600 text-white rounded-xl text-sm font-bold hover:from-emerald-600 hover:to-emerald-500 transition-all shadow-md">
-                                Simpan Perubahan
+                                Simpan
                             </button>
                         </div>
                     </div>

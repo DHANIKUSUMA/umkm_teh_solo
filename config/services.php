@@ -22,6 +22,13 @@ return [
         'key' => env('RESEND_API_KEY'),
     ],
 
+    'supabase' => [
+        'url' => env('SUPABASE_URL', 'https://ujqjqbiacmaziuisiffm.supabase.co'),
+        'service_role_key' => env('SUPABASE_SERVICE_ROLE_KEY'),
+        'storage_bucket' => env('SUPABASE_STORAGE_BUCKET', 'bukti_pembayaran'),
+        'signed_url_ttl' => env('SUPABASE_SIGNED_URL_TTL', 3600),
+    ],
+
     'ses' => [
         'key' => env('AWS_ACCESS_KEY_ID'),
         'secret' => env('AWS_SECRET_ACCESS_KEY'),

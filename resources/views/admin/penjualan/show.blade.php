@@ -26,7 +26,7 @@
 
                 <a href="{{ route('admin.penjualan.create') }}" class="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-emerald-700 to-emerald-600 text-white rounded-xl text-xs font-bold hover:from-emerald-600 hover:to-emerald-500 transition shadow-xs">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                    <span>+ Transaksi Baru</span>
+                    <span>Transaksi Baru</span>
                 </a>
             </div>
         </div>
@@ -75,7 +75,7 @@
                 </div>
             </div>
 
-            {{-- 2 Kolom: Detail Rincian Item (Kiri) & Bukti Bayar / Kasir Info (Kanan) --}}
+            {{-- 2 Kolom: Detail Rincian Item (Kiri) & Bukti Bayar / Karyawan Info (Kanan) --}}
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
                 {{-- Tabel Item Produk (8 Kolom) --}}
@@ -147,10 +147,10 @@
                     @endif
                 </div>
 
-                {{-- Informasi Kasir & Bukti Pembayaran (4 Kolom) --}}
+                {{-- Informasi Karyawan & Bukti Pembayaran (4 Kolom) --}}
                 <div class="lg:col-span-4 space-y-4">
 
-                    {{-- Bukti Pembayaran (QRIS / Transfer) --}}
+                    {{-- Bukti Pembayaran (QRIS) --}}
                     <div class="bg-white/90 backdrop-blur-md rounded-2xl shadow-md border border-stone-200/80 p-5 relative overflow-hidden">
                         <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
 
@@ -159,7 +159,7 @@
                                 <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                 <span>Bukti Pembayaran</span>
                             </h4>
-                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase {{ $penjualan->metode_bayar === 'qris' ? 'bg-blue-100 text-blue-800' : ($penjualan->metode_bayar === 'tunai' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800') }}">
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase {{ $penjualan->metode_bayar === 'qris' ? 'bg-blue-100 text-blue-800' : 'bg-emerald-100 text-emerald-800' }}">
                                 {{ $penjualan->metode_bayar }}
                             </span>
                         </div>
@@ -168,7 +168,7 @@
                             <div class="space-y-3">
                                 <div class="rounded-xl overflow-hidden border border-stone-200 relative group cursor-pointer" @click="lightboxOpen = true">
                                     <img
-                                        src="{{ asset('storage/' . $penjualan->bukti_bayar) }}"
+                                        src="{{ $buktiBayarUrl }}"
                                         alt="Bukti Bayar {{ $penjualan->no_nota }}"
                                         class="w-full h-48 object-cover group-hover:scale-105 transition duration-300"
                                     >
@@ -180,7 +180,7 @@
 
                                 <div class="flex items-center justify-between text-xs">
                                     <a
-                                        href="{{ asset('storage/' . $penjualan->bukti_bayar) }}"
+                                        href="{{ $buktiBayarUrl }}"
                                         target="_blank"
                                         class="text-blue-700 hover:underline font-semibold flex items-center gap-1"
                                     >
@@ -194,7 +194,7 @@
                         @else
                             <div class="p-6 text-center rounded-xl bg-stone-50 border border-stone-200/70 text-stone-400 text-xs">
                                 @if ($penjualan->metode_bayar === 'tunai')
-                                    <span>Pembayaran Tunai (Cash) - Tidak memerlukan bukti transfer online.</span>
+                                    <span>Pembayaran Tunai (Cash) - Tidak memerlukan bukti pembayaran QRIS.</span>
                                 @else
                                     <span>Tidak ada file foto bukti bayar yang diunggah untuk transaksi ini.</span>
                                 @endif
@@ -202,7 +202,7 @@
                         @endif
                     </div>
 
-                    {{-- Informasi Petugas Kasir & Tanggal --}}
+                    {{-- Informasi Karyawan & Tanggal --}}
                     <div class="bg-white/90 backdrop-blur-md rounded-2xl shadow-md border border-stone-200/80 p-5 space-y-3">
                         <h4 class="font-bold text-xs uppercase tracking-wider text-stone-400">Informasi Pelayanan</h4>
 
@@ -211,7 +211,7 @@
                                 {{ strtoupper(substr($penjualan->user->name ?? 'A', 0, 1)) }}
                             </div>
                             <div class="min-w-0">
-                                <div class="text-xs font-bold text-emerald-950 truncate">{{ $penjualan->user->name ?? 'Kasir' }}</div>
+                                <div class="text-xs font-bold text-emerald-950 truncate">{{ $penjualan->user->name ?? 'Karyawan' }}</div>
                                 <div class="text-[10px] text-stone-500 capitalize">{{ $penjualan->user->role ?? 'Petugas' }} • {{ $penjualan->user->email ?? '-' }}</div>
                             </div>
                         </div>
@@ -273,12 +273,12 @@
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                     </button>
                     <img
-                        src="{{ asset('storage/' . $penjualan->bukti_bayar) }}"
+                        src="{{ $buktiBayarUrl }}"
                         alt="Bukti Bayar Full"
                         class="max-h-[85vh] w-auto mx-auto object-contain rounded-xl"
                     >
                     <div class="p-3 text-center text-xs font-bold text-stone-700">
-                        Foto Bukti Pembayaran QRIS / Transfer - No. Nota: {{ $penjualan->no_nota }}
+                        Foto Bukti Pembayaran QRIS - No. Nota: {{ $penjualan->no_nota }}
                     </div>
                 </div>
             </div>

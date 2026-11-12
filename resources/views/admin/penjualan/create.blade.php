@@ -191,7 +191,7 @@
                                 Metode Pembayaran <span class="text-rose-500">*</span>
                             </label>
 
-                            <div class="grid grid-cols-3 gap-2">
+                            <div class="grid grid-cols-2 gap-2">
                                 {{-- Tunai --}}
                                 <label class="cursor-pointer">
                                     <input type="radio" name="metode_bayar" value="tunai" x-model="metodeBayar" class="sr-only">
@@ -213,18 +213,6 @@
                                     >
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
                                         <span>QRIS</span>
-                                    </div>
-                                </label>
-
-                                {{-- Transfer --}}
-                                <label class="cursor-pointer">
-                                    <input type="radio" name="metode_bayar" value="transfer" x-model="metodeBayar" class="sr-only">
-                                    <div
-                                        class="p-2.5 text-center rounded-xl border text-xs font-bold transition flex flex-col items-center gap-1"
-                                        :class="metodeBayar === 'transfer' ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs' : 'bg-stone-50 text-stone-700 border-stone-200 hover:bg-stone-100'"
-                                    >
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"/></svg>
-                                        <span>Transfer</span>
                                     </div>
                                 </label>
                             </div>
@@ -298,21 +286,6 @@
                                 >
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                                 </button>
-                            </div>
-                        </div>
-
-                        {{-- Panel Khusus Transfer: Upload Bukti Transfer --}}
-                        <div x-show="metodeBayar === 'transfer'" class="p-3.5 bg-amber-50/70 rounded-xl border border-amber-200 space-y-2.5">
-                            <div class="text-xs font-bold text-amber-950">Transfer Rekening Bank UMKM Teh Solo</div>
-                            <div class="text-[11px] text-stone-600">BCA: 123-456-7890 a.n UMKM Teh Solo</div>
-                            <div>
-                                <label class="block text-xs font-semibold text-stone-700 mb-1">Upload Bukti Transfer (Opsional)</label>
-                                <input
-                                    type="file"
-                                    name="bukti_bayar"
-                                    accept="image/*"
-                                    class="w-full text-xs text-stone-600 file:mr-2.5 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-amber-600 file:text-white hover:file:bg-amber-700 cursor-pointer"
-                                >
                             </div>
                         </div>
 
@@ -424,6 +397,11 @@
                             event.preventDefault();
                             return false;
                         }
+                    }
+                    if (this.metodeBayar === 'qris' && !this.imagePreview) {
+                        alert('Silakan upload foto bukti pembayaran QRIS terlebih dahulu!');
+                        event.preventDefault();
+                        return false;
                     }
                     return true;
                 }

@@ -65,6 +65,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/penjualan/create', [PenjualanController::class, 'create'])->name('penjualan.create');
     Route::post('/penjualan', [PenjualanController::class, 'store'])->name('penjualan.store');
     Route::get('/penjualan/{penjualan}', [PenjualanController::class, 'show'])->name('penjualan.show');
+    Route::get('/penjualan/{penjualan}/bukti-bayar', [PenjualanController::class, 'paymentProof'])->name('penjualan.proof');
     Route::patch('/penjualan/{penjualan}/status', [PenjualanController::class, 'updateStatus'])->name('penjualan.update-status');
 
     // Laporan (pemantauan penjualan & produk terlaris)
@@ -79,6 +80,7 @@ Route::middleware(['auth', 'role:karyawan'])->prefix('karyawan')->name('karyawan
     Route::get('/dashboard', [KasirController::class, 'index'])->name('dashboard');
     Route::get('/kasir', [KasirController::class, 'index'])->name('kasir.index');
     Route::post('/kasir/pesanan', [KasirController::class, 'store'])->name('kasir.store');
+    Route::get('/kasir/pesanan/{penjualan}/bukti-bayar', [KasirController::class, 'paymentProof'])->name('kasir.proof');
 });
 
 // Admin ATAU Karyawan bisa akses

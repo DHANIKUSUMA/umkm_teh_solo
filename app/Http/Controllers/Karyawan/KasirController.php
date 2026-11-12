@@ -7,6 +7,7 @@ use App\Models\DetailPenjualan;
 use App\Models\Penjualan;
 use App\Models\Produk;
 use App\Models\VarianProduk;
+use App\Services\SupabaseStorage;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -52,13 +53,15 @@ class KasirController extends Controller
     /**
      * Simpan transaksi pesanan baru dari kasir karyawan.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, SupabaseStorage $supabaseStorage): RedirectResponse
     {
         $validated = $request->validate([
             'items' => ['required', 'string'],
-            'metode_bayar' => ['required', 'in:tunai,qris,transfer'],
-            'bukti_bayar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:4096'],
+            'metode_bayar' => ['required', 'in:tunai,qris'],
+            'bukti_bayar' => ['required_if:metode_bayar,qris', 'nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:4096'],
             'catatan' => ['nullable', 'string', 'max:255'],
+        ], [
+            'bukti_bayar.required_if' => 'Foto bukti bayar QRIS wajib diunggah untuk metode pembayaran QRIS.',
         ]);
 
         $cartItems = json_decode($validated['items'], true);
@@ -67,10 +70,10 @@ class KasirController extends Controller
             return back()->with('error', 'Keranjang pesanan masih kosong. Silakan pilih minimal 1 item produk.');
         }
 
-        // Upload bukti pembayaran jika diunggah (khususnya QRIS / Transfer)
+        // Upload bukti pembayaran jika disertakan.
         $buktiPath = null;
         if ($request->hasFile('bukti_bayar')) {
-            $buktiPath = $request->file('bukti_bayar')->store('bukti_bayar', 'public');
+            $buktiPath = $supabaseStorage->store($request->file('bukti_bayar'));
         }
 
         try {
@@ -135,5 +138,13 @@ class KasirController extends Controller
         } catch (\Exception $e) {
             return back()->with('error', 'Gagal menyimpan pesanan: '.$e->getMessage());
         }
+    }
+
+    public function paymentProof(Penjualan $penjualan, SupabaseStorage $supabaseStorage): RedirectResponse
+    {
+        abort_unless($penjualan->user_id === Auth::id(), 404);
+        abort_if(! $penjualan->bukti_bayar, 404);
+
+        return redirect()->away($supabaseStorage->temporaryUrl($penjualan->bukti_bayar));
     }
 }

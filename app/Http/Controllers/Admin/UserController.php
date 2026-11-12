@@ -18,7 +18,7 @@ class UserController extends Controller
      */
     public function index(Request $request): View
     {
-        $query = User::query();
+        $query = User::query()->where('role', 'karyawan');
 
         // Filter pencarian berdasarkan nama, username, atau email
         if ($request->filled('search')) {
@@ -28,11 +28,6 @@ class UserController extends Controller
                     ->orWhere('username', 'like', '%'.$search.'%')
                     ->orWhere('email', 'like', '%'.$search.'%');
             });
-        }
-
-        // Filter berdasarkan role
-        if ($request->filled('role')) {
-            $query->where('role', $request->role);
         }
 
         // Filter berdasarkan status aktif

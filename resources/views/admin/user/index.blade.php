@@ -36,11 +36,6 @@
                         <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama, username, atau email..."
                             class="w-full border-stone-300 focus:border-emerald-500 focus:ring-emerald-500 rounded-lg shadow-sm text-sm placeholder:text-stone-400">
                     </div>
-                    <select name="role" class="border-stone-300 focus:border-emerald-500 focus:ring-emerald-500 rounded-lg shadow-sm text-sm">
-                        <option value="">Semua Role</option>
-                        <option value="admin" {{ request('role') === 'admin' ? 'selected' : '' }}>Admin</option>
-                        <option value="karyawan" {{ request('role') === 'karyawan' ? 'selected' : '' }}>Karyawan</option>
-                    </select>
                     <select name="status" class="border-stone-300 focus:border-emerald-500 focus:ring-emerald-500 rounded-lg shadow-sm text-sm">
                         <option value="">Semua Status</option>
                         <option value="aktif" {{ request('status') === 'aktif' ? 'selected' : '' }}>Aktif</option>
@@ -110,6 +105,7 @@
                                                 <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                                 Edit
                                             </a>
+
                                             <form method="POST" action="{{ route('admin.user.toggle-active', $user) }}" class="inline">
                                                 @csrf
                                                 @method('PATCH')
@@ -147,13 +143,18 @@
                                     {{ $user->is_active ? 'Aktif' : 'Non-Aktif' }}
                                 </span>
                             </div>
-                            <p class="text-xs text-stone-500 ml-10">@{{ $user->username }} · {{ $user->email }}</p>
+                            <p class="text-xs text-stone-500 ml-10">{{ $user->username }} - {{ $user->email }}</p>
                             <div class="mt-2 ml-10 flex items-center gap-2">
                                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium
                                     {{ $user->role === 'admin' ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800' }}">
                                     {{ ucfirst($user->role) }}
                                 </span>
-                                <a href="{{ route('admin.user.edit', $user) }}" class="text-xs text-amber-600 font-medium hover:underline">Edit</a>
+                                <a href="{{ route('admin.user.edit', $user->username) }}" class="text-xs text-amber-600 font-medium hover:underline">Edit</a>
+                                <button type="submit" class="inline-flex items-center px-2.5 py-1.5 rounded-lg text-xs font-medium transition
+                                                    {{ $user->is_active ? ' text-red-700 hover:bg-red-100' : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100' }}"
+                                                    onclick="return confirm('{{ $user->is_active ? 'Nonaktifkan' : 'Aktifkan' }} karyawan ini?')">
+                                                    {{ $user->is_active ? 'Nonaktifkan' : 'Aktifkan' }}
+                                </button>
                             </div>
                         </div>
                     @empty

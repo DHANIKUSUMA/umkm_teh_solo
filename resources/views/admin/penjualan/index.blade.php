@@ -7,7 +7,7 @@
                     <h2 class="font-bold text-xl text-emerald-950 leading-tight">
                         {{ __('Data Transaksi Penjualan') }}
                     </h2>
-                    <p class="text-xs text-stone-500 mt-0.5">Pemantauan riwayat nota transaksi, kasir, dan pembayaran QRIS/Tunai</p>
+                    <p class="text-xs text-stone-500 mt-0.5">Pemantauan riwayat nota transaksi, karyawan, dan pembayaran QRIS/Tunai</p>
                 </div>
             </div>
             <div>
@@ -65,7 +65,6 @@
                         <option value="">Semua Metode</option>
                         <option value="tunai" {{ request('metode_bayar') === 'tunai' ? 'selected' : '' }}>Tunai</option>
                         <option value="qris" {{ request('metode_bayar') === 'qris' ? 'selected' : '' }}>QRIS</option>
-                        <option value="transfer" {{ request('metode_bayar') === 'transfer' ? 'selected' : '' }}>Transfer</option>
                     </select>
                     <input type="date" name="dari_tanggal" value="{{ request('dari_tanggal') }}"
                         class="border-stone-300 focus:border-emerald-600 focus:ring-emerald-600 rounded-xl shadow-2xs text-xs" placeholder="Dari tanggal">
@@ -94,7 +93,7 @@
                         <thead class="bg-stone-50/80 text-xs font-bold text-stone-600 uppercase tracking-wider">
                             <tr>
                                 <th class="text-left px-6 py-3.5">No. Nota</th>
-                                <th class="text-left px-6 py-3.5">Kasir / Petugas</th>
+                                <th class="text-left px-6 py-3.5">Karyawan</th>
                                 <th class="text-left px-6 py-3.5">Waktu Transaksi</th>
                                 <th class="text-center px-6 py-3.5">Metode Bayar</th>
                                 <th class="text-center px-6 py-3.5">Bukti Bayar</th>
@@ -111,7 +110,7 @@
                                             {{ $penjualan->no_nota }}
                                         </a>
                                     </td>
-                                    <td class="px-6 py-4 text-stone-700 font-medium">{{ $penjualan->user?->name ?? 'Kasir' }}</td>
+                                    <td class="px-6 py-4 text-stone-700 font-medium">{{ $penjualan->user?->name ?? 'Karyawan' }}</td>
                                     <td class="px-6 py-4 text-stone-500">{{ \Carbon\Carbon::parse($penjualan->tanggal)->format('d M Y, H:i') }}</td>
                                     <td class="px-6 py-4 text-center">
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase
@@ -121,7 +120,7 @@
                                     </td>
                                     <td class="px-6 py-4 text-center">
                                         @if ($penjualan->bukti_bayar)
-                                            <a href="{{ asset('storage/' . $penjualan->bukti_bayar) }}" target="_blank" class="inline-flex items-center gap-1 text-[11px] font-bold text-blue-700 hover:underline">
+                                            <a href="{{ route('admin.penjualan.proof', $penjualan) }}" target="_blank" class="inline-flex items-center gap-1 text-[11px] font-bold text-blue-700 hover:underline">
                                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                                 Foto Ada
                                             </a>
@@ -169,7 +168,7 @@
                                     <a href="{{ route('admin.penjualan.show', $penjualan) }}" class="font-bold text-emerald-950 text-sm hover:underline">
                                         {{ $penjualan->no_nota }}
                                     </a>
-                                    <div class="text-[11px] text-stone-500">{{ $penjualan->user?->name ?? 'Kasir' }} · {{ \Carbon\Carbon::parse($penjualan->tanggal)->format('d M Y, H:i') }}</div>
+                                    <div class="text-[11px] text-stone-500">{{ $penjualan->user?->name ?? 'Karyawan' }} · {{ \Carbon\Carbon::parse($penjualan->tanggal)->format('d M Y, H:i') }}</div>
                                 </div>
                                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold
                                     {{ $penjualan->status === 'selesai' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800' }}">
@@ -184,7 +183,7 @@
                                         {{ $penjualan->metode_bayar }}
                                     </span>
                                     @if ($penjualan->bukti_bayar)
-                                        <a href="{{ asset('storage/' . $penjualan->bukti_bayar) }}" target="_blank" class="text-[10px] font-bold text-blue-700 underline">
+                                        <a href="{{ route('admin.penjualan.proof', $penjualan) }}" target="_blank" class="text-[10px] font-bold text-blue-700 underline">
                                             Foto QRIS
                                         </a>
                                     @endif

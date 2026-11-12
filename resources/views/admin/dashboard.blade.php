@@ -101,7 +101,7 @@
                         <thead class="bg-stone-50/80">
                             <tr>
                                 <th class="text-left px-6 py-3 font-semibold text-stone-600">No. Nota</th>
-                                <th class="text-left px-6 py-3 font-semibold text-stone-600">Kasir</th>
+                                <th class="text-left px-6 py-3 font-semibold text-stone-600">Karyawan</th>
                                 <th class="text-left px-6 py-3 font-semibold text-stone-600">Tanggal</th>
                                 <th class="text-left px-6 py-3 font-semibold text-stone-600">Metode</th>
                                 <th class="text-right px-6 py-3 font-semibold text-stone-600">Total</th>
