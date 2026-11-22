@@ -47,13 +47,13 @@ class LaporanController extends Controller
             ->where('status', 'batal')
             ->count();
 
-        // Penjualan per hari di bulan tersebut (untuk grafik)
+        // Penjualan per hari di bulan tersebut (agregasi harian)
         $penjualanPerHari = Penjualan::selectRaw('DATE(tanggal) as tanggal, COUNT(*) as jumlah, SUM(total) as pendapatan')
             ->whereMonth('tanggal', $bulan)
             ->whereYear('tanggal', $tahun)
             ->where('status', 'selesai')
-            ->groupBy('tanggal')
-            ->orderBy('tanggal')
+            ->groupBy(DB::raw('DATE(tanggal)'))
+            ->orderBy(DB::raw('DATE(tanggal)'))
             ->get();
 
         // Produk terlaris (top 10)
@@ -66,7 +66,7 @@ class LaporanController extends Controller
             ->selectRaw('varian_produk_id, SUM(qty) as total_qty, SUM(subtotal) as total_pendapatan')
             ->groupBy('varian_produk_id')
             ->orderByDesc('total_qty')
-            ->take(10)
+            ->take(5)
             ->get();
 
         // Data per metode bayar (untuk pie chart)

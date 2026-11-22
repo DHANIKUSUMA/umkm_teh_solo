@@ -7,7 +7,7 @@
                 </a>
                 <div class="w-2 h-8 bg-gradient-to-b from-emerald-500 to-emerald-700 rounded-full"></div>
                 <div>
-                    <h2 class="font-bold text-xl text-emerald-950 leading-tight">
+                    <h2 class="font-bold text-lg sm:text-xl text-emerald-950 leading-tight">
                         {{ __('Nota Transaksi: ') . $penjualan->no_nota }}
                     </h2>
                     <p class="text-xs text-stone-500 mt-0.5">Rincian produk, bukti pembayaran, dan kalkulasi keuntungan</p>
@@ -44,7 +44,7 @@
             @endif
 
             {{-- Ringkasan Transaksi --}}
-            <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <div class="bg-white/90 backdrop-blur-md rounded-2xl shadow-md border border-stone-200/80 p-5">
                     <p class="text-xs font-bold uppercase tracking-wider text-stone-400">Total Penjualan</p>
                     <p class="text-2xl font-extrabold text-emerald-950 mt-1">Rp {{ number_format($penjualan->total, 0, ',', '.') }}</p>

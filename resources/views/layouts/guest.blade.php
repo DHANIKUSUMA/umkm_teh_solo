@@ -58,7 +58,7 @@
             <!-- Footer -->
             <div class="mt-8 text-center text-xs text-stone-500 space-y-1">
                 <p class="font-medium">© {{ date('Y') }} UMKM Teh Solo. All rights reserved.</p>
-                <p class="text-stone-400">Menjaga Cita Rasa Teh Khas Nusantara Sejak Dini</p>
+                <p class="text-stone-400">Dikembangkan oleh Dhani dan Faisol Mahasiswa Prodi Sistem Informasi Universitas Trunogjoyo Madura</p>
             </div>
         </div>
     </body>

@@ -23,51 +23,56 @@ class PenjualanController extends Controller
     public function index(Request $request): View
     {
         $query = Penjualan::with(['user', 'detailPenjualans.varianProduk']);
+        $statsQuery = Penjualan::query();
 
         // Filter berdasarkan pencarian no_nota
         if ($request->filled('search')) {
             $query->where('no_nota', 'like', '%'.$request->search.'%');
+            $statsQuery->where('no_nota', 'like', '%'.$request->search.'%');
         }
 
         // Filter berdasarkan status
         if ($request->filled('status')) {
             $query->where('status', $request->status);
+            $statsQuery->where('status', $request->status);
         }
 
         // Filter berdasarkan metode pembayaran
         if ($request->filled('metode_bayar')) {
             $query->where('metode_bayar', $request->metode_bayar);
+            $statsQuery->where('metode_bayar', $request->metode_bayar);
         }
 
-        // Filter berdasarkan rentang tanggal
-        if ($request->filled('dari_tanggal')) {
-            $query->whereDate('tanggal', '>=', $request->dari_tanggal);
+        // Tentukan periode tanggal
+        // Default: 'hari_ini' jika tidak ada input rentang tanggal & tidak memilih periode lain
+        $periode = $request->input('periode');
+        if (! $request->has('periode') && ! $request->filled('dari_tanggal') && ! $request->filled('sampai_tanggal')) {
+            $periode = 'hari_ini';
         }
 
-        if ($request->filled('sampai_tanggal')) {
-            $query->whereDate('tanggal', '<=', $request->sampai_tanggal);
+        if ($request->filled('dari_tanggal') || $request->filled('sampai_tanggal')) {
+            $periode = 'custom';
+            if ($request->filled('dari_tanggal')) {
+                $query->whereDate('tanggal', '>=', $request->dari_tanggal);
+                $statsQuery->whereDate('tanggal', '>=', $request->dari_tanggal);
+            }
+            if ($request->filled('sampai_tanggal')) {
+                $query->whereDate('tanggal', '<=', $request->sampai_tanggal);
+                $statsQuery->whereDate('tanggal', '<=', $request->sampai_tanggal);
+            }
+        } elseif ($periode === 'hari_ini') {
+            $query->whereDate('tanggal', Carbon::today());
+            $statsQuery->whereDate('tanggal', Carbon::today());
+        } elseif ($periode === 'bulan_ini') {
+            $query->whereMonth('tanggal', Carbon::now()->month)
+                ->whereYear('tanggal', Carbon::now()->year);
+            $statsQuery->whereMonth('tanggal', Carbon::now()->month)
+                ->whereYear('tanggal', Carbon::now()->year);
+        } elseif ($periode === 'semua') {
+            // Tampilkan semua data tanpa filter tanggal
         }
 
         $penjualans = $query->latest('tanggal')->paginate(15)->withQueryString();
-
-        // Statistik ringkasan (tanpa pagination untuk akurasi)
-        $statsQuery = Penjualan::query();
-
-        if ($request->filled('search')) {
-            $statsQuery->where('no_nota', 'like', '%'.$request->search.'%');
-        }
-        if ($request->filled('status')) {
-            $statsQuery->where('status', $request->status);
-        }
-        if ($request->filled('metode_bayar')) {
-            $statsQuery->where('metode_bayar', $request->metode_bayar);
-        }
-        if ($request->filled('dari_tanggal')) {
-            $statsQuery->whereDate('tanggal', '>=', $request->dari_tanggal);
-        }
-        if ($request->filled('sampai_tanggal')) {
-            $statsQuery->whereDate('tanggal', '<=', $request->sampai_tanggal);
-        }
 
         $totalTransaksi = $statsQuery->count();
         $totalPendapatan = (clone $statsQuery)->where('status', 'selesai')->sum('total');
@@ -76,6 +81,7 @@ class PenjualanController extends Controller
             'penjualans',
             'totalTransaksi',
             'totalPendapatan',
+            'periode',
         ));
     }
 

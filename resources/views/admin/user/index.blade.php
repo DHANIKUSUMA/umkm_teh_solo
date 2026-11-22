@@ -1,16 +1,21 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
             <div class="flex items-center gap-3">
                 <div class="w-2 h-8 bg-gradient-to-b from-stone-400 to-stone-600 rounded-full"></div>
-                <h2 class="font-bold text-xl text-emerald-950 leading-tight">
-                    {{ __('Manajemen Pengguna') }}
-                </h2>
+                <div>
+                    <h2 class="font-bold text-xl text-emerald-950 leading-tight">
+                        {{ __('Manajemen Pengguna') }}
+                    </h2>
+                    <p class="text-xs text-stone-500 mt-0.5">Kelola akun admin dan staf kasir</p>
+                </div>
             </div>
-            <a href="{{ route('admin.user.create') }}" class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-emerald-700 to-emerald-600 text-white rounded-lg text-sm font-semibold hover:from-emerald-600 hover:to-emerald-500 transition-all shadow-md hover:shadow-lg">
-                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-                Tambah Karyawan
-            </a>
+            <div>
+                <a href="{{ route('admin.user.create') }}" class="inline-flex items-center gap-1.5 px-4 py-2.5 bg-gradient-to-r from-emerald-700 to-emerald-600 text-white rounded-xl text-sm font-semibold hover:from-emerald-600 hover:to-emerald-500 transition-all shadow-md shadow-emerald-700/20">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                    <span>Tambah Karyawan</span>
+                </a>    
+            </div>
         </div>
     </x-slot>
 

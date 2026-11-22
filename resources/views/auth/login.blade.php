@@ -54,9 +54,9 @@
         <!-- Register Link -->
         <div class="mt-6 pt-5 border-t border-stone-200 text-center">
             <p class="text-sm text-stone-500">
-                Belum punya akun?
-                <a href="{{ route('register') }}" class="font-semibold text-emerald-700 hover:text-emerald-900 transition duration-200">
-                    Daftar Sekarang
+                Lupa Akun silahkan hubungi 
+                <a href="https://wa.me/6289627085170?text={{ urlencode('Halo Bapak Danar, saya lupa akun login MyTehSolo. Mohon bantuannya.') }}" class="font-semibold text-emerald-700 hover:text-emerald-900 transition duration-200" target="_blank" rel="noopener noreferrer">
+                    Owner (Bapak Danar)
                 </a>
             </p>
         </div>

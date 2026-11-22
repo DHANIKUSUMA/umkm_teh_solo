@@ -108,10 +108,17 @@ class SupabaseStorage
     {
         $serviceRoleKey = $this->configValue('service_role_key');
 
-        return Http::acceptJson()
-            ->withToken($serviceRoleKey)
+        $request = Http::acceptJson()
             ->withHeaders(['apikey' => $serviceRoleKey])
             ->timeout(30);
+
+        // Hanya tambahkan header Authorization Bearer jika key berbentuk JWT (diawali eyJ)
+        // Format kunci rahasia baru Supabase (sb_secret_...) tidak boleh dikirim sebagai Bearer agar tidak ditolak sebagai 'Invalid Compact JWS'
+        if (str_starts_with($serviceRoleKey, 'eyJ')) {
+            $request = $request->withToken($serviceRoleKey);
+        }
+
+        return $request;
     }
 
     private function objectUrl(string $path, string $operation = ''): string

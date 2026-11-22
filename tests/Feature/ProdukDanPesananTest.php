@@ -236,3 +236,37 @@ it('falls back to local storage when supabase service role key is not configured
     expect($penjualan->bukti_bayar)->not->toBeNull();
     Storage::disk('public')->assertExists($penjualan->bukti_bayar);
 });
+
+it('defaults sales transaction list to today and allows period filtering', function () {
+    $adminRole = Role::findOrCreate('admin', 'web');
+    $admin = User::factory()->create(['role' => 'admin']);
+    $admin->assignRole($adminRole);
+
+    // Penjualan hari ini
+    $todayOrder = Penjualan::factory()->create([
+        'user_id' => $admin->id,
+        'tanggal' => now(),
+        'status' => 'selesai',
+        'total' => 20000,
+    ]);
+
+    // Penjualan 2 hari yang lalu
+    $pastOrder = Penjualan::factory()->create([
+        'user_id' => $admin->id,
+        'tanggal' => now()->subDays(2),
+        'status' => 'selesai',
+        'total' => 15000,
+    ]);
+
+    // Default akses (hanya hari ini)
+    $response = $this->actingAs($admin)->get(route('admin.penjualan.index'));
+    $response->assertOk();
+    $response->assertSee($todayOrder->no_nota);
+    $response->assertDontSee($pastOrder->no_nota);
+
+    // Akses dengan periode=semua
+    $responseAll = $this->actingAs($admin)->get(route('admin.penjualan.index', ['periode' => 'semua']));
+    $responseAll->assertOk();
+    $responseAll->assertSee($todayOrder->no_nota);
+    $responseAll->assertSee($pastOrder->no_nota);
+});
