@@ -58,7 +58,6 @@
                         <select name="role" id="role" required
                             class="w-full border-stone-300 focus:border-emerald-500 focus:ring-emerald-500 rounded-lg shadow-sm text-sm">
                             <option value="karyawan" {{ old('role', 'karyawan') === 'karyawan' ? 'selected' : '' }}>Karyawan</option>
-                            <option value="admin" {{ old('role') === 'admin' ? 'selected' : '' }}>Admin</option>
                         </select>
                         @error('role')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
