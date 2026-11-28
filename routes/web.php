@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Admin\ForecastController;
 use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\PenjualanController;
 use App\Http\Controllers\Admin\ProdukController;
@@ -71,8 +70,6 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     // Laporan (pemantauan penjualan & produk terlaris)
     Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
 
-    // Forecast Penjualan
-    Route::get('/forecast', [ForecastController::class, 'index'])->name('forecast.index');
 });
 
 // Khusus Karyawan

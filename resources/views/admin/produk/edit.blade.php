@@ -56,17 +56,6 @@
                         <span class="px-2.5 py-1 rounded-full text-xs font-bold {{ $produk->is_active ? 'bg-emerald-100 text-emerald-800' : 'bg-stone-200 text-stone-600' }}">
                             {{ $produk->is_active ? 'Aktif' : 'NonAktif' }}
                         </span>
-                        <form method="POST" action="{{ route('admin.produk.update', $produk) }}">
-                            {{-- input nama dan tombol simpan --}}
-                        </form>
-                        <form method="POST" action="{{ route('admin.produk.toggle-active', $produk) }}">
-                            @csrf
-                            @method('PATCH')
-
-                            <button type="submit" class="inline-flex items-center px-2.5 py-1.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-medium hover:bg-amber-100 transition" title="Edit">
-                                {{ $produk->is_active ? 'Nonaktifkan' : 'Aktifkan' }}
-                            </button>
-                        </form>
                     </div>
 
                     </div>

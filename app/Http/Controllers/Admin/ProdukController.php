@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Produk;
 use App\Models\VarianProduk;
+use Closure;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -46,13 +47,18 @@ class ProdukController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        $this->trimProductName($request);
+
         $validated = $request->validate([
-            'nama' => ['required', 'string', 'max:100'],
+            'nama' => ['required', 'string', 'max:100', $this->uniqueProductNameRule()],
             'varians' => ['required', 'array', 'min:1'],
             'varians.*.nama_varian' => ['required', 'string', 'max:50'],
             'varians.*.kategori' => ['nullable', 'string', 'max:50'],
-            'varians.*.harga_modal' => ['required', 'numeric', 'min:0'],
-            'varians.*.harga_jual' => ['required', 'numeric', 'min:0'],
+            'varians.*.harga_modal' => ['required', 'numeric', 'min:0', 'max:100000'],
+            'varians.*.harga_jual' => ['required', 'numeric', 'min:0', 'max:100000'],
+        ], [
+            'varians.*.harga_modal.max' => 'Harga modal tidak boleh lebih dari Rp100.000.',
+            'varians.*.harga_jual.max' => 'Harga jual tidak boleh lebih dari Rp100.000.',
         ]);
 
         $produk = Produk::create([
@@ -107,8 +113,10 @@ class ProdukController extends Controller
      */
     public function update(Request $request, Produk $produk): RedirectResponse
     {
+        $this->trimProductName($request);
+
         $validated = $request->validate([
-            'nama' => ['required', 'string', 'max:100'],
+            'nama' => ['required', 'string', 'max:100', $this->uniqueProductNameRule($produk)],
         ]);
 
         $produk->update($validated);
@@ -138,8 +146,11 @@ class ProdukController extends Controller
         $validated = $request->validate([
             'nama_varian' => ['required', 'string', 'max:50'],
             'kategori' => ['nullable', 'string', 'max:50'],
-            'harga_modal' => ['required', 'numeric', 'min:0'],
-            'harga_jual' => ['required', 'numeric', 'min:0'],
+            'harga_modal' => ['required', 'numeric', 'min:0', 'max:100000'],
+            'harga_jual' => ['required', 'numeric', 'min:0', 'max:100000'],
+        ], [
+            'harga_modal.max' => 'Harga modal tidak boleh lebih dari Rp100.000.',
+            'harga_jual.max' => 'Harga jual tidak boleh lebih dari Rp100.000.',
         ]);
 
         VarianProduk::create([
@@ -163,8 +174,11 @@ class ProdukController extends Controller
         $validated = $request->validate([
             'nama_varian' => ['required', 'string', 'max:50'],
             'kategori' => ['nullable', 'string', 'max:50'],
-            'harga_modal' => ['required', 'numeric', 'min:0'],
-            'harga_jual' => ['required', 'numeric', 'min:0'],
+            'harga_modal' => ['required', 'numeric', 'min:0', 'max:100000'],
+            'harga_jual' => ['required', 'numeric', 'min:0', 'max:100000'],
+        ], [
+            'harga_modal.max' => 'Harga modal tidak boleh lebih dari Rp100.000.',
+            'harga_jual.max' => 'Harga jual tidak boleh lebih dari Rp100.000.',
         ]);
 
         $varian->update($validated);
@@ -219,5 +233,34 @@ class ProdukController extends Controller
 
         return redirect()->route('admin.produk.index')
             ->with('success', 'Produk dan variannya berhasil dihapus.');
+    }
+
+    private function trimProductName(Request $request): void
+    {
+        $name = $request->input('nama');
+
+        if (is_string($name)) {
+            $request->merge(['nama' => trim($name)]);
+        }
+    }
+
+    private function uniqueProductNameRule(?Produk $currentProduct = null): Closure
+    {
+        return function (string $attribute, mixed $value, Closure $fail) use ($currentProduct): void {
+            if (! is_string($value)) {
+                return;
+            }
+
+            $query = Produk::query()
+                ->where('nama_key', mb_strtolower(trim($value)));
+
+            if ($currentProduct !== null) {
+                $query->where('id', '!=', $currentProduct->id);
+            }
+
+            if ($query->exists()) {
+                $fail('Nama produk sudah digunakan. Pilih nama produk yang berbeda.');
+            }
+        };
     }
 }

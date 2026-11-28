@@ -137,7 +137,7 @@
                         action="{{ route('admin.penjualan.store') }}"
                         enctype="multipart/form-data"
                         class="p-4 sm:p-5 space-y-4"
-                        @submit="return validateBeforeSubmit($event)"
+                        @submit="validateBeforeSubmit($event)"
                     >
                         @csrf
                         {{-- Hidden JSON Items --}}

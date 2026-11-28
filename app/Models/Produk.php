@@ -12,11 +12,20 @@ class Produk extends Model
     protected $table = 'produks';
 
     protected $fillable = [
-        'nama', 
-        'is_active'
+        'nama',
+        'is_active',
     ];
 
-    public function varians() {
+    protected static function booted(): void
+    {
+        static::saving(function (Produk $produk): void {
+            $produk->nama = trim($produk->nama);
+            $produk->nama_key = mb_strtolower($produk->nama);
+        });
+    }
+
+    public function varians()
+    {
         return $this->hasMany(VarianProduk::class, 'produk_id');
     }
 }

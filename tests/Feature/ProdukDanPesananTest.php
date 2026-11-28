@@ -4,6 +4,7 @@ use App\Models\Penjualan;
 use App\Models\Produk;
 use App\Models\User;
 use App\Models\VarianProduk;
+use Database\Seeders\ProdukSeeder;
 use Illuminate\Http\Client\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
@@ -37,6 +38,80 @@ it('allows admin to create a new product with variants', function () {
     $this->assertDatabaseHas('produks', ['nama' => 'Teh Kampul Super']);
     $this->assertDatabaseHas('varian_produks', ['nama_varian' => 'Cup Jumbo', 'harga_jual' => 6000]);
     $this->assertDatabaseHas('varian_produks', ['nama_varian' => 'Cup Regular', 'harga_jual' => 4500]);
+});
+
+it('rejects a product name that already exists regardless of case or outer whitespace', function () {
+    $adminRole = Role::findOrCreate('admin', 'web');
+    $admin = User::factory()->create(['role' => 'admin']);
+    $admin->assignRole($adminRole);
+
+    Produk::query()->create(['nama' => 'teh', 'is_active' => true]);
+
+    $response = $this->actingAs($admin)->post(route('admin.produk.store'), [
+        'nama' => ' TEH ',
+        'varians' => [
+            [
+                'nama_varian' => 'Cup Regular',
+                'harga_modal' => 2000,
+                'harga_jual' => 4000,
+            ],
+        ],
+    ]);
+
+    $response->assertSessionHasErrors([
+        'nama' => 'Nama produk sudah digunakan. Pilih nama produk yang berbeda.',
+    ]);
+    $this->assertDatabaseCount('produks', 1);
+});
+
+it('allows a different product type while another type already exists', function () {
+    $adminRole = Role::findOrCreate('admin', 'web');
+    $admin = User::factory()->create(['role' => 'admin']);
+    $admin->assignRole($adminRole);
+
+    Produk::query()->create(['nama' => 'teh', 'is_active' => true]);
+
+    $response = $this->actingAs($admin)->post(route('admin.produk.store'), [
+        'nama' => 'thaiTea',
+        'varians' => [
+            [
+                'nama_varian' => 'Thai Tea Original',
+                'harga_modal' => 2000,
+                'harga_jual' => 4000,
+            ],
+        ],
+    ]);
+
+    $response->assertRedirect(route('admin.produk.index'));
+    $this->assertDatabaseHas('produks', ['nama' => 'teh']);
+    $this->assertDatabaseHas('produks', ['nama' => 'thaiTea']);
+});
+
+it('rejects renaming a product to another existing product name', function () {
+    $adminRole = Role::findOrCreate('admin', 'web');
+    $admin = User::factory()->create(['role' => 'admin']);
+    $admin->assignRole($adminRole);
+    $tea = Produk::query()->create(['nama' => 'teh', 'is_active' => true]);
+    $thaiTea = Produk::query()->create(['nama' => 'thaiTea', 'is_active' => true]);
+
+    $response = $this->actingAs($admin)->put(route('admin.produk.update', $thaiTea), [
+        'nama' => ' TEH ',
+    ]);
+
+    $response->assertSessionHasErrors([
+        'nama' => 'Nama produk sudah digunakan. Pilih nama produk yang berbeda.',
+    ]);
+    $this->assertDatabaseHas('produks', ['id' => $tea->id, 'nama' => 'teh']);
+    $this->assertDatabaseHas('produks', ['id' => $thaiTea->id, 'nama' => 'thaiTea']);
+});
+
+it('does not duplicate seeded products or variants when the product seeder runs again', function () {
+    $seeder = app(ProdukSeeder::class);
+    $seeder->run();
+    $seeder->run();
+
+    $this->assertDatabaseCount('produks', 4);
+    $this->assertDatabaseCount('varian_produks', 12);
 });
 
 it('allows karyawan to create a new order with qris and photo upload', function () {

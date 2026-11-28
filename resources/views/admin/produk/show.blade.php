@@ -55,6 +55,16 @@
                 </div>
             @endif
 
+            @if ($errors->any())
+                <div class="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-sm">
+                    <ul class="list-disc list-inside text-xs text-rose-700 space-y-0.5">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             {{-- Ringkasan Menu --}}
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div class="bg-white/90 backdrop-blur-md rounded-2xl shadow-md border border-stone-200/80 p-5">
@@ -179,11 +189,11 @@
                         <div class="grid grid-cols-2 gap-3">
                             <div>
                                 <label class="block text-xs font-bold text-stone-700 mb-1">Harga Modal <span class="text-rose-500">*</span></label>
-                                <input type="number" min="0" step="500" name="harga_modal" placeholder="0" required class="w-full border-stone-300 focus:border-emerald-600 focus:ring-emerald-600 rounded-xl text-xs">
+                                <input type="number" min="0" max="100000" step="500" name="harga_modal" placeholder="0" required class="w-full border-stone-300 focus:border-emerald-600 focus:ring-emerald-600 rounded-xl text-xs">
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-stone-700 mb-1">Harga Jual <span class="text-rose-500">*</span></label>
-                                <input type="number" min="0" step="500" name="harga_jual" placeholder="0" required class="w-full border-stone-300 focus:border-emerald-600 focus:ring-emerald-600 rounded-xl text-xs">
+                                <input type="number" min="0" max="100000" step="500" name="harga_jual" placeholder="0" required class="w-full border-stone-300 focus:border-emerald-600 focus:ring-emerald-600 rounded-xl text-xs">
                             </div>
                         </div>
 
@@ -229,11 +239,11 @@
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="block text-xs font-bold text-stone-700 mb-1">Harga Modal <span class="text-rose-500">*</span></label>
-                            <input type="number" min="0" step="500" name="harga_modal" x-model="editingVarian.harga_modal" required class="w-full border-stone-300 focus:border-emerald-600 focus:ring-emerald-600 rounded-xl text-xs">
+                            <input type="number" min="0" max="100000" step="500" name="harga_modal" x-model="editingVarian.harga_modal" required class="w-full border-stone-300 focus:border-emerald-600 focus:ring-emerald-600 rounded-xl text-xs">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-stone-700 mb-1">Harga Jual <span class="text-rose-500">*</span></label>
-                            <input type="number" min="0" step="500" name="harga_jual" x-model="editingVarian.harga_jual" required class="w-full border-stone-300 focus:border-emerald-600 focus:ring-emerald-600 rounded-xl text-xs">
+                            <input type="number" min="0" max="100000" step="500" name="harga_jual" x-model="editingVarian.harga_jual" required class="w-full border-stone-300 focus:border-emerald-600 focus:ring-emerald-600 rounded-xl text-xs">
                         </div>
                     </div>
 

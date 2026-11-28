@@ -143,6 +143,7 @@
                                             <input
                                                 type="number"
                                                 min="0"
+                                                max="100000"
                                                 step="500"
                                                 :name="'varians[' + index + '][harga_modal]'"
                                                 x-model.number="varian.harga_modal"
@@ -160,6 +161,7 @@
                                             <input
                                                 type="number"
                                                 min="0"
+                                                max="100000"
                                                 step="500"
                                                 :name="'varians[' + index + '][harga_jual]'"
                                                 x-model.number="varian.harga_jual"

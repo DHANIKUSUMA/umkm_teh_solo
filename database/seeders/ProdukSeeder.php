@@ -106,20 +106,27 @@ class ProdukSeeder extends Seeder
         ];
 
         foreach ($daftarProduk as $item) {
-            $produk = Produk::create([
-                'nama' => $item['nama'],
-                'is_active' => true,
-            ]);
+            $produk = Produk::query()->updateOrCreate(
+                ['nama_key' => mb_strtolower(trim($item['nama']))],
+                [
+                    'nama' => $item['nama'],
+                    'is_active' => true,
+                ],
+            );
 
             foreach ($item['varians'] as $varian) {
-                VarianProduk::create([
-                    'produk_id' => $produk->id,
-                    'kategori' => $varian['kategori'],
-                    'nama_varian' => $varian['nama_varian'],
-                    'harga_modal' => $varian['harga_modal'],
-                    'harga_jual' => $varian['harga_jual'],
-                    'is_active' => true,
-                ]);
+                VarianProduk::query()->updateOrCreate(
+                    [
+                        'produk_id' => $produk->id,
+                        'nama_varian' => $varian['nama_varian'],
+                    ],
+                    [
+                        'kategori' => $varian['kategori'],
+                        'harga_modal' => $varian['harga_modal'],
+                        'harga_jual' => $varian['harga_jual'],
+                        'is_active' => true,
+                    ],
+                );
             }
         }
     }
